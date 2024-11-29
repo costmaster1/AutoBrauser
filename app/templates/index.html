@@ -1,0 +1,73 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Home-Page{% endblock %}
+
+{% block content %}
+    <div class="content-fluid">
+        <div class="d-flex flex-md-row justify-content-evenly">
+            <div class="p-2">
+                <h2>Добавить действие</h2>
+            <form action="/add_action" method="post">
+                <label class="form-label" for="action_type">Тип действия:</label><br>
+            
+                <select name="action_type" id="action_type">
+                    <option value="open_url">Открыть URL</option>
+                    <option value="click">Клик по элементу</option>
+                    <option value="input">Ввод текста</option>
+                    <option value="wait">Явное ожидание (в секундах)</option>
+                </select>
+                <br><br>
+                
+                <label class="form-label" for="value">Значение (URL или XPath или wait):</label><br>
+                <input type="text" name="value" id="value" required>
+                <br><br>
+            
+                <div id="input_field" style="display: none;">
+                    <label class="form-label" for="xpath">XPath для ввода текста:</label><br>
+                    <input type="text" name="xpath" id="xpath">
+                    <br><br>
+                </div>
+                
+                <button type="submit" class="btn btn-outline-dark">Добавить действие</button><br><br>
+                <a class="btn btn-outline-dark" href="/run" role="button">Запустить последовательность действий</a><br><br>
+                <a class="btn btn-outline-dark" href="/clear" role="button">Очистить список действий</a>
+            </form>
+            </div>
+
+            <div class="p-2">
+                <h2>Список действий</h2>
+                <ul>
+                 {% for action in actions %}
+                 <li>{{ action['type'] }} — {{ action.get('value', action.get('xpath', '')) }}</li>
+                 {% endfor %}
+                </ul>
+            </div>
+
+            <div class="p-2">
+                <h2>Статус выполнения</h2>
+                <ul>
+                    {% for action in actions %}
+                    <li>{{ action['type'] }} — {{ action.get('value', action.get('xpath', '')) }}</li>
+                    {% endfor %}
+                </ul>
+                
+            </div>
+
+        </div>
+
+            
+
+      
+    </div>
+    
+    
+<script>
+    // Показать дополнительное поле для ввода текста, если выбрано действие "input"
+    document.getElementById("action_type").addEventListener("change", function() {
+        document.getElementById("input_field").style.display = 
+            this.value === "input" ? "block" : "none";
+    });
+</script>
+{% endblock %}
+
